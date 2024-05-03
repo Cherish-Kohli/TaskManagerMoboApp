@@ -1,56 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
-import * as SplashScreen from 'expo-splash-screen';
+import React, { useEffect } from 'react';
+import { View, Image, StyleSheet, StatusBar } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const SplashScreenComponent = ({ navigation }) => {
-    useEffect(() => {
-        async function prepare() {
-            try {
-                // Prevent the splash screen from hiding
-                await SplashScreen.preventAutoHideAsync();
+function SplashScreen() {
+  const navigation = useNavigation();
 
-                // Simulate a network request or heavy resource loading
-                await new Promise(resolve => setTimeout(resolve, 6000)); // Simulating a 6-second load time
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace('Home');  // Assuming 'Home' is the screen you want to navigate to after the splash
+    }, 5000); // Display the splash screen for 3 seconds
 
-                // After all tasks complete, set the app to ready
-                setAppIsReady(true);
-            } catch (e) {
-                console.warn(e);
-            }
-        }
+    return () => clearTimeout(timer);
+  }, [navigation]);
 
-        prepare();
-    }, []);
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="default" />
+      <Image source={require('../assets/logo.png')} style={styles.logo} />
+    </View>
+  );
+}
 
-    useEffect(() => {
-        if (appIsReady) {
-            // When the app is ready and the splash screen is still visible, hide it
-            SplashScreen.hideAsync().then(() => {
-                navigation.replace('Login'); // Navigate when the splash screen hides
-            });
-        }
-    }, [appIsReady, navigation]);
-
-    const [appIsReady, setAppIsReady] = useState(false);
-
-    return (
-        <View style={styles.container}>
-            <Image
-                source={require('../assets/logo.png')}
-                style={styles.logo}
-            />
-            <Text style={styles.title}>Task Manager</Text>
-            <ActivityIndicator size="large" color="#FFFFFF" />
-        </View>
-    );
-};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#4A90E2',
+        backgroundColor: '#4A90E2', // A nice blue background
     },
     logo: {
         width: 120,
@@ -60,9 +37,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
-        color: '#FFFFFF',
+        color: '#FFFFFF', // White color for the text
     },
 });
 
-export default SplashScreenComponent;
+export default SplashScreen;

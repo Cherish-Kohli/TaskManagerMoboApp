@@ -1,75 +1,46 @@
 import React from 'react';
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 
-export function GlobalLayout({ children, navigation, currentScreen, onNavigate, userSettings }) {
+const GlobalLayout = ({ children }) => {
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: userSettings.themeColor }]}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => onNavigate('Home')}>
-          <MaterialIcons name="home" size={24} color={currentScreen === 'Home' ? '#FFD700' : '#FFFFFF'} />
-          <Text style={styles.iconText}>Home</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Task Manager</Text>
-        <TouchableOpacity onPress={() => onNavigate('Settings')}>
-          <MaterialIcons name="settings" size={24} color={currentScreen === 'Settings' ? '#FFD700' : '#FFFFFF'} />
-        </TouchableOpacity>
+        <Text style={styles.headerText}>Plan-Pal</Text>
       </View>
-      <View style={styles.container}>
-        {children}
-      </View>
+      {children}
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => onNavigate('Calendar')}>
-          <MaterialIcons name="calendar-today" size={24} color={currentScreen === 'Calendar' ? '#FFD700' : '#FFFFFF'} />
-          <Text style={styles.iconText}>Calendar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => onNavigate('Tasks')}>
-          <MaterialIcons name="list" size={24} color={currentScreen === 'Tasks' ? '#FFD700' : '#FFFFFF'} />
-          <Text style={styles.iconText}>Tasks</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => onNavigate('About')}>
-          <MaterialIcons name="info" size={24} color={currentScreen === 'About' ? '#FFD700' : '#FFFFFF'} />
-          <Text style={styles.iconText}>About</Text>
-        </TouchableOpacity>
+        <Text style={styles.footerText}>© 2024 Plan-Pal, Inc.</Text>
       </View>
     </SafeAreaView>
   );
-}
-
-GlobalLayout.defaultProps = {
-  userSettings: {
-    themeColor: '#4A90E2' // Default theme color
-  }
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#4A90E2',
-  },
-  headerText: {
-    fontSize: 20,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-  },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#f0f0f0'
+  },
+  header: {
+    height: 60,
+    backgroundColor: '#4A90E2',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerText: {
+    color: '#ffffff',
+    fontSize: 20,
+    fontWeight: 'bold'
   },
   footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
+    height: 50,
     backgroundColor: '#4A90E2',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  iconText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-  },
+  footerText: {
+    color: '#ffffff',
+    fontSize: 16
+  }
 });
+
+export default GlobalLayout;
