@@ -1,10 +1,16 @@
+// components/GlobalLayout.js
 import React from 'react';
-import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const GlobalLayout = ({ children }) => {
+const GlobalLayout = ({ children, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
+        {/* Add a drawer button */}
+        <TouchableOpacity style={styles.drawerButton} onPress={() => navigation.toggleDrawer()}>
+          <Ionicons name="menu" size={24} color="white" />
+        </TouchableOpacity>
         <Text style={styles.headerText}>Plan-Pal</Text>
       </View>
       {children}
@@ -18,18 +24,23 @@ const GlobalLayout = ({ children }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0'
+    backgroundColor: '#f0f0f0',
   },
   header: {
-    height: 60,
-    backgroundColor: '#4A90E2',
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#4A90E2',
+    height: 60,
+  },
+  drawerButton: {
+    marginLeft: 10,
   },
   headerText: {
     color: '#ffffff',
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   footer: {
     height: 50,
@@ -39,8 +50,8 @@ const styles = StyleSheet.create({
   },
   footerText: {
     color: '#ffffff',
-    fontSize: 16
-  }
+    fontSize: 16,
+  },
 });
 
 export default GlobalLayout;

@@ -4,6 +4,10 @@ import { View, Text, StyleSheet } from 'react-native';
 function SettingsScreen() {
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <DrawerButton navigation={navigation} />
+        <Text style={styles.headerText}>Settings</Text>
+      </View>
       <Text>Settings Screen</Text>
     </View>
   );

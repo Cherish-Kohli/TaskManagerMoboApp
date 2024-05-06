@@ -6,8 +6,12 @@ import { View, Text, Button } from 'react-native';
 const TaskDetailScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={styles.header}>
+        <DrawerButton navigation={navigation} />
+        <Text style={styles.headerText}>Task Details</Text>
+      </View>
       <Text>Example Screen</Text>
-      // Optionally add navigation buttons if needed
+      
       <Button
         title="Go to Next Screen"
         onPress={() => navigation.navigate('NextScreenName')}

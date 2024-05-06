@@ -1,44 +1,65 @@
-import React, { useEffect } from 'react';
-import { View, Image, StyleSheet, StatusBar } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+// SplashScreen.js
+import React, { useEffect, useCallback, useState } from 'react';
+import { View, Image, StyleSheet } from 'react-native';
+import * as SplashScreen from 'expo-splash-screen';
 
-function SplashScreen() {
-  const navigation = useNavigation();
+// Prevent the splash screen from auto-hiding
+SplashScreen.preventAutoHideAsync();
+
+function SplashScreenComponent({ navigation }) {
+  const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigation.replace('Home');  // Assuming 'Home' is the screen you want to navigate to after the splash
-    }, 5000); // Display the splash screen for 3 seconds
+    // Prepare resources (e.g., fonts, images, API calls)
+    async function prepare() {
+      try {
+        // Simulate any resource loading or initialization process
+        await new Promise((resolve) => setTimeout(resolve, 4000));
+      } finally {
+        // Mark that the app is ready to show
+        setAppIsReady(true);
+      }
+    }
 
-    return () => clearTimeout(timer);
-  }, [navigation]);
+    prepare();
+  }, []);
+
+  // This function will be called once the layout is fully visible
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // Hide the splash screen now that the app is ready
+      await SplashScreen.hideAsync();
+      // Navigate to the main screen
+      navigation.replace('Main');
+    }
+  }, [appIsReady, navigation]);
+
+  // Return null if the app is not ready yet
+  if (!appIsReady) {
+    return null;
+  }
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="default" />
+    <View
+      style={styles.container}
+      onLayout={onLayoutRootView}
+    >
       <Image source={require('../assets/logo.png')} style={styles.logo} />
     </View>
   );
 }
 
-
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#4A90E2', // A nice blue background
-    },
-    logo: {
-        width: 120,
-        height: 120,
-        marginBottom: 20,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#FFFFFF', // White color for the text
-    },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#4A90E2',
+  },
+  logo: {
+    width: 120,
+    height: 120,
+  },
 });
 
-export default SplashScreen;
+export default SplashScreenComponent;

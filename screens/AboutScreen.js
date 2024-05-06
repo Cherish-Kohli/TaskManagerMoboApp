@@ -1,20 +1,36 @@
-// Import React and necessary components from React Native
+// screens/AboutScreen.js
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
-// Define a functional component for each screen
-const AboutScreen = ({ navigation }) => {
+function AboutScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Example Screen</Text>
-      // Optionally add navigation buttons if needed
-      <Button
-        title="Go to Next Screen"
-        onPress={() => navigation.navigate('NextScreenName')}
-      />
+    <View style={styles.container}>
+      {/* Make sure all text content is wrapped in <Text> */}
+      
+      <Text>Welcome to the About Screen</Text>
     </View>
   );
-};
+}
 
-// Make sure to export the component
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#4A90E2',
+    height: 60,
+  },
+  headerText: {
+    color: '#ffffff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+});
+
 export default AboutScreen;
