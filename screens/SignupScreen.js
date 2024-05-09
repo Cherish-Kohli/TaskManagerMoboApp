@@ -11,7 +11,7 @@ const SignupScreen = ({ navigation }) => {
     const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(true);
     const [error, setError] = useState('');
 
-    const handleSignup = () => {
+    const handleSignup = async () => {
         if (!email || !password || !confirmPassword) {
             setError('Please fill all fields');
             return;
@@ -20,9 +20,35 @@ const SignupScreen = ({ navigation }) => {
             setError('Passwords do not match');
             return;
         }
-        // Add more validation or API calls for registration here
-        console.log('Signup successful with:', email, password);
-    };
+        try {
+        const response = await fetch('http://172.20.10.2:3000/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: email,
+                password: password,
+            }),
+        });
+        
+        if (response.ok) {
+            const json = await response.json();
+            console.log('Signup successful:', json);
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            });
+        } else {
+            const errorResponse = await response.text();  // Get text instead of json to avoid parsing error
+            console.error('Signup failed with response:', errorResponse);
+            setError(errorResponse || 'Signup failed');
+        }
+    } catch (error) {
+        console.error('Signup request error:', error);
+        setError('Network error or server is unreachable.');
+    }
+};
 
     const togglePasswordVisibility = () => {
         setPasswordVisibility(!passwordVisibility);

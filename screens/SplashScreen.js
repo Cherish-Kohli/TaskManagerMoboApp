@@ -30,7 +30,7 @@ function SplashScreenComponent({ navigation }) {
       // Hide the splash screen now that the app is ready
       await SplashScreen.hideAsync();
       // Navigate to the main screen
-      navigation.replace('Main');
+      navigation.replace('Login');
     }
   }, [appIsReady, navigation]);
 

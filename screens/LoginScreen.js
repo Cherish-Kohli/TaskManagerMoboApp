@@ -9,14 +9,35 @@ const LoginScreen = ({ navigation }) => {
     const [passwordVisibility, setPasswordVisibility] = useState(true);
     const [error, setError] = useState('');
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         if (!email || !password) {
             setError('Please fill all fields');
             return;
         }
-        // Add more validation or API calls for authentication here
-        console.log('Login successful with:', email, password);
+        try {
+            const response = await fetch('http://172.20.10.2:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: email,
+                    password: password,
+                }),
+            });
+            const json = await response.json();
+            if (response.status === 200) {
+                console.log('Login successful:', json);
+                navigation.navigate('Main'); // Assuming 'Main' is your home screen route name
+            } else {
+                setError(json.message || 'Authentication failed');
+            }
+        } catch (error) {
+            setError('Network error');
+            console.error('Login request error:', error);
+        }
     };
+    
 
     const togglePasswordVisibility = () => {
         setPasswordVisibility(!passwordVisibility);
