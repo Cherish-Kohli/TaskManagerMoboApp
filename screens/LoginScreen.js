@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { TextInput, Button, Text, HelperText } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -9,13 +10,21 @@ const LoginScreen = ({ navigation }) => {
     const [passwordVisibility, setPasswordVisibility] = useState(true);
     const [error, setError] = useState('');
 
+    const storeToken = async (token) => {
+        try {
+            await AsyncStorage.setItem('userToken', token);
+            console.log('Token stored successfully');
+        } catch (e) {
+            console.error('Storing token failed', e);
+        }
+    };
     const handleLogin = async () => {
         if (!email || !password) {
             setError('Please fill all fields');
             return;
         }
         try {
-            const response = await fetch('http://172.20.10.2:3000/login', {
+            const response = await fetch('http:/192.168.1.106:3000/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,6 +36,7 @@ const LoginScreen = ({ navigation }) => {
             });
             const json = await response.json();
             if (response.status === 200) {
+                await storeToken(json.accessToken); 
                 console.log('Login successful:', json);
                 navigation.navigate('Main'); // Assuming 'Main' is your home screen route name
             } else {

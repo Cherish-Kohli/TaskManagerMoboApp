@@ -6,6 +6,7 @@ import AboutScreen from '../screens/AboutScreen';
 import TaskListScreen from '../screens/TaskListScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import TaskDetailScreen from '../screens/TaskDetailScreen';
+import TaskCreation from '../screens/TaskCreation';
 
 const Drawer = createDrawerNavigator();
 
@@ -17,6 +18,7 @@ function DrawerNavigator() {
       <Drawer.Screen name="TaskList" component={TaskListScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="TaskDetails" component={TaskDetailScreen} />
+      <Drawer.Screen name="TaskCreation" component={TaskCreation} />
     </Drawer.Navigator>
   );
 }

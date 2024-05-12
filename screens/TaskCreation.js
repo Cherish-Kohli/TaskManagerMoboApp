@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Picker } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { Calendar } from 'react-native-calendars'; // Import Calendar component
+import { Picker } from '@react-native-picker/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const TaskCreationScreen = ({ navigation }) => {
   const [title, setTitle] = useState('');
@@ -9,19 +13,40 @@ const TaskCreationScreen = ({ navigation }) => {
   const [category, setCategory] = useState('');
   const [status, setStatus] = useState('Pending');     // Default status
 
-  const handleCreateTask = () => {
-    // Validate input fields
+  // Function to handle task creation
+  const handleCreateTask = async () => {
     if (!title.trim() || !dueDate.trim()) {
       alert('Please fill out all required fields.');
       return;
     }
-    
-    // Here you might typically send this data back to your API/Server
-    console.log('Task created:', { title, description, dueDate, priority, category, status });
 
-    // Navigate back to the previous screen
-    navigation.goBack();
+    const token = await AsyncStorage.getItem('userToken');
+    if (!token) {
+      console.error('No token found');
+      // Handle logged out scenario or token expiration
+      return;
+    }
+
+    fetch('http:/192.168.1.106:3000/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        title, description, dueDate, priority, category, status
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Task created successfully:', data);
+      navigation.goBack();
+    })
+    .catch(error => {
+      console.error('Error creating task:', error);
+    });
   };
+
 
   return (
     <View style={styles.container}>
@@ -41,12 +66,10 @@ const TaskCreationScreen = ({ navigation }) => {
         style={styles.input}
         multiline
       />
-      <TextInput
-        placeholder="Due Date (YYYY-MM-DD)"
-        value={dueDate}
-        onChangeText={setDueDate}
-        style={styles.input}
-        keyboardType="numeric"
+      {/* Calendar component */}
+      <Calendar
+        onDayPress={(day) => setDueDate(day.dateString)} // Capture selected date
+        markedDates={{ [dueDate]: { selected: true, selectedColor: 'blue' } }} // Highlight selected date
       />
       <TextInput
         placeholder="Category"
@@ -80,6 +103,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: 'center',
+  },
+  header: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   input: {
     marginBottom: 10,

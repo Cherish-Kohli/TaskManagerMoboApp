@@ -21,7 +21,7 @@ const SignupScreen = ({ navigation }) => {
             return;
         }
         try {
-        const response = await fetch('http://172.20.10.2:3000/signup', {
+        const response = await fetch('http://192.168.1.106:3000/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
