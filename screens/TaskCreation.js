@@ -27,7 +27,7 @@ const TaskCreationScreen = ({ navigation }) => {
       return;
     }
 
-    fetch('http:/192.168.1.106:3000/tasks', {
+    fetch('http:/172.20.10.2:3000/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
