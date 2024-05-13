@@ -1,37 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const TaskListScreen = ({ navigation }) => {
   const [tasks, setTasks] = useState([]);
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchTasks = async () => {
+        const token = await AsyncStorage.getItem('userToken');
+        fetch('http://192.168.1.106:3000/tasks', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log('Data fetched:', data);
+          setTasks(data);
+        })
+        .catch(error => {
+          console.error('Error fetching tasks:', error);
+          Alert.alert("Error", "Failed to fetch tasks");
+        });
+      };
 
-  const fetchTasks = async () => {
-    const token = await AsyncStorage.getItem('userToken');
-    fetch('http://172.20.10.2:3000/tasks', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log('Data fetched:', data);
-      setTasks(data);
-    })
-    .catch(error => {
-      console.error('Error fetching tasks:', error);
-      Alert.alert("Error", "Failed to fetch tasks");
-    });
-  };
+      fetchTasks();
+    }, [])
+  );
 
   const deleteTask = async (id) => {
     const token = await AsyncStorage.getItem('userToken');
-    fetch(`http://172.20.10.2:3000/tasks/${id}`, {
+    fetch(`http://192.168.1.106:3000/tasks/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    backgroundColor: '#f9f9f9', // Light grey background for each item
+    backgroundColor: '#f9f9f9',
   },
   taskDetails: {
     flex: 3,
@@ -99,18 +102,18 @@ const styles = StyleSheet.create({
   taskTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333', // Darker text for better readability
+    color: '#333',
   },
   taskDescription: {
     fontSize: 14,
-    color: '#666', // Lighter text for descriptions
+    color: '#666',
   },
   buttonsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   buttonStyle: {
-    backgroundColor: '#6200ee', // Example purple background for buttons
+    backgroundColor: '#6200ee',
     padding: 10,
     borderRadius: 5,
     marginLeft: 10,
