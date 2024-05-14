@@ -6,11 +6,13 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Alert,
   Modal,
   TouchableOpacity
 } from "react-native";
 import { Calendar } from "react-native-calendars"; // Import Calendar component
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useGlobalStyles } from '../styles/globalStyles'; 
 
 const TaskCreationScreen = ({ navigation }) => {
   const [title, setTitle] = useState("");
@@ -22,6 +24,8 @@ const TaskCreationScreen = ({ navigation }) => {
   const [modalPriorityVisible, setModalPriorityVisible] = useState(false);
   const [modalStatusVisible, setModalStatusVisible] = useState(false);
 
+  const globalStyles = useGlobalStyles();
+  
   // Function to handle task creation
   const handleCreateTask = async () => {
     if (!title.trim() || !due_date.trim()) {
@@ -54,6 +58,7 @@ const TaskCreationScreen = ({ navigation }) => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Task created successfully:", data);
+        Alert.alert("Success", "Task created successfully"); // Show the success alert
         navigation.goBack();
       })
       .catch((error) => {
@@ -63,10 +68,10 @@ const TaskCreationScreen = ({ navigation }) => {
 
   return (
     <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: 20 }}
+    style={globalStyles.container}
+    contentContainerStyle={{ paddingBottom: 20 }}
     >
-      <Text style={styles.headerText}>Create Task</Text>
+      <Text style={globalStyles.text}>Create Task</Text>
       <TextInput
         placeholder="Title"
         value={title}
@@ -92,27 +97,27 @@ const TaskCreationScreen = ({ navigation }) => {
       />
 
       <TouchableOpacity style={styles.input} onPress={() => setModalPriorityVisible(true)}>
-        <Text>{priority}</Text>
+        <Text style={globalStyles.text}>{priority}</Text>
       </TouchableOpacity>
       <Modal
         transparent={true}
         visible={modalPriorityVisible}
         onRequestClose={() => setModalPriorityVisible(false)}
       >
-        <TouchableOpacity style={styles.modalView} onPress={() => setModalPriorityActive(false)}>
+        <TouchableOpacity style={styles.modalView} onPress={() => setModalPriorityVisible(false)}>
           {["High", "Medium", "Low"].map((p) => (
             <TouchableOpacity key={p} style={styles.modalItem} onPress={() => {
               setPriority(p);
               setModalPriorityVisible(false);
             }}>
-              <Text>{p}</Text>
+              <Text style={globalStyles.text}>{p}</Text>
             </TouchableOpacity>
           ))}
         </TouchableOpacity>
       </Modal>
 
       <TouchableOpacity style={styles.input} onPress={() => setModalStatusVisible(true)}>
-        <Text>{status}</Text>
+        <Text style={globalStyles.text}>{status}</Text>
       </TouchableOpacity>
       <Modal
         transparent={true}
@@ -125,7 +130,7 @@ const TaskCreationScreen = ({ navigation }) => {
               setStatus(s);
               setModalStatusVisible(false);
             }}>
-              <Text>{s}</Text>
+              <Text style={globalStyles.text}>{s}</Text>
             </TouchableOpacity>
           ))}
         </TouchableOpacity>

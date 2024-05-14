@@ -60,7 +60,7 @@ const TaskDetailScreen = ({ route, navigation }) => {
         priority: task.priority,
         category: task.category,
         status: task.status,
-        due_date: task.dueDate,
+        due_date: task.due_date,
       }),
     })
       .then((res) => {

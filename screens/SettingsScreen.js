@@ -1,14 +1,23 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { useSettings } from '../context/SettingsContext';  // Make sure the path is correct
+import { useGlobalStyles } from '../styles/globalStyles'; 
+
 
 function SettingsScreen() {
+  const { settings, saveSettings } = useSettings();
+  const globalStyles = useGlobalStyles();
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <DrawerButton navigation={navigation} />
-        <Text style={styles.headerText}>Settings</Text>
-      </View>
-      <Text>Settings Screen</Text>
+    <View style={globalStyles.container}
+    contentContainerStyle={{ paddingBottom: 20 }}>
+      <Text style={globalStyles.text}>Current Font Size: {settings.fontSize}</Text>
+      <Button title="Set Large Font" onPress={() => saveSettings({ fontSize: 'large' })} />
+      <Button title="Set Medium Font" onPress={() => saveSettings({ fontSize: 'medium' })} />
+      <Button title="Set Small Font" onPress={() => saveSettings({ fontSize: 'small' })} />
+
+      <Text style={globalStyles.text}>Current Background Color: {settings.backgroundColor}</Text>
+      <Button title="Set Light Background" onPress={() => saveSettings({ backgroundColor: '#fff' })} />
+      <Button title="Set Dark Background" onPress={() => saveSettings({ backgroundColor: '#000' })} />
     </View>
   );
 }
@@ -16,9 +25,10 @@ function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-  },
+    alignItems: 'center',
+    padding: 20,
+  }
 });
 
 export default SettingsScreen;

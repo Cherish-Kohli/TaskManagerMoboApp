@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 
+
 const TaskListScreen = ({ navigation }) => {
   const [tasks, setTasks] = useState([]);
 
@@ -17,17 +18,29 @@ const TaskListScreen = ({ navigation }) => {
             'Content-Type': 'application/json'
           }
         })
-        .then(res => res.json())
+        .then(res => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            // Handle HTTP errors
+            throw new Error('Failed to fetch tasks.');
+          }
+        })
         .then(data => {
-          console.log('Data fetched:', data);
-          setTasks(data);
+          if (Array.isArray(data) && data.length > 0) {
+            console.log('Data fetched:', data);
+            setTasks(data);
+          } else {
+            // No tasks found
+            Alert.alert("Notice", "No tasks available.");
+          }
         })
         .catch(error => {
           console.error('Error fetching tasks:', error);
-          Alert.alert("Error", "Failed to fetch tasks");
+          Alert.alert("Error", "Unable to load tasks. Please try again later.");
         });
       };
-
+      
       fetchTasks();
     }, [])
   );

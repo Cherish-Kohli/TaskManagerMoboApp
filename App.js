@@ -2,11 +2,14 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './navigation/AppNavigator';
+import { SettingsProvider } from './context/SettingsContext'; 
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
+    <SettingsProvider>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </SettingsProvider>
   );
 }
