@@ -1,4 +1,7 @@
 // navigation/AppNavigator.js
+
+// Initialize the stack navigator to manage the navigation stack of the application.
+
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreenComponent from '../screens/SplashScreen';
@@ -9,11 +12,14 @@ import TaskDetails from '../screens/TaskDetailScreen';
 import TaskListScreen from '../screens/TaskListScreen';
 import DrawerNavigator from '../navigation/DrawerNavigator';
 
+// Configure the navigation stack with screens and their options.
+
 const Stack = createNativeStackNavigator();
 
 function AppNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Splash">
+    // Define the Splash screen configuration in the navigation stack.
+    <Stack.Navigator initialRouteName="Splash"> 
       <Stack.Screen name="Splash" component={SplashScreenComponent} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} /> 

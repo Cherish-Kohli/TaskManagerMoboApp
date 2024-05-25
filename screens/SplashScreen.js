@@ -3,37 +3,37 @@ import React, { useEffect, useCallback, useState } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 
-// Prevent the splash screen from auto-hiding
+// Prevents the splash screen from auto-hiding to ensure it remains visible during initial app loading.
 SplashScreen.preventAutoHideAsync();
 
 function SplashScreenComponent({ navigation }) {
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
-    // Prepare resources (e.g., fonts, images, API calls)
     async function prepare() {
+      console.log("Preparation started");
       try {
-        // Simulate any resource loading or initialization process
-        await new Promise((resolve) => setTimeout(resolve, 4000));
+        await new Promise(resolve => setTimeout(resolve, 4000)); // Simulate a loading process
       } finally {
-        // Mark that the app is ready to show
+        console.log("Preparation done");
         setAppIsReady(true);
       }
     }
-
+  
     prepare();
   }, []);
-
-  // This function will be called once the layout is fully visible
+  
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      // Hide the splash screen now that the app is ready
       await SplashScreen.hideAsync();
-      // Navigate to the main screen
-      navigation.replace('Login');
+      console.log("Splash screen hidden");
+      setTimeout(() => {
+        navigation.replace('Login');
+      }, 3000); // Delay the navigation by 3 seconds
     }
   }, [appIsReady, navigation]);
-
+  
+  
   // Return null if the app is not ready yet
   if (!appIsReady) {
     return null;

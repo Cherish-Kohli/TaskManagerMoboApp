@@ -1,14 +1,22 @@
+// Import necessary libraries and components for task list management.
+
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 
+// Define the TaskListScreen component with navigation props for routing.
 
 const TaskListScreen = ({ navigation }) => {
+  // State to store the list of tasks fetched from the server.
+
   const [tasks, setTasks] = useState([]);
+// Fetch tasks from the server whenever this screen is focused.
 
   useFocusEffect(
     React.useCallback(() => {
+      // Function to fetch tasks from the server using AsyncStorage for secure token storage.
+
       const fetchTasks = async () => {
         const token = await AsyncStorage.getItem('userToken');
         fetch('http://192.168.1.106:3000/tasks', {
@@ -26,6 +34,9 @@ const TaskListScreen = ({ navigation }) => {
             throw new Error('Failed to fetch tasks.');
           }
         })
+
+        // Handle HTTP errors and empty data scenarios with alerts.
+
         .then(data => {
           if (Array.isArray(data) && data.length > 0) {
             console.log('Data fetched:', data);
@@ -45,6 +56,7 @@ const TaskListScreen = ({ navigation }) => {
     }, [])
   );
 
+  // Function to delete a task based on its ID and update the state.
   const deleteTask = async (id) => {
     const token = await AsyncStorage.getItem('userToken');
     fetch(`http://192.168.1.106:3000/tasks/${id}`, {
@@ -68,8 +80,12 @@ const TaskListScreen = ({ navigation }) => {
     });
   };
 
+  // Render a flat list of tasks with delete and detail buttons.
+
   return (
     <View style={styles.container}>
+       {/* Display the list of tasks using a FlatList for efficient rendering. */}
+
       <FlatList
         data={tasks}
         keyExtractor={item => item.id.toString()}
@@ -93,6 +109,8 @@ const TaskListScreen = ({ navigation }) => {
     </View>
   );
 };
+
+// StyleSheet definitions for the TaskListScreen layout and components.
 
 const styles = StyleSheet.create({
   container: {

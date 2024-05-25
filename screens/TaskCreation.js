@@ -15,6 +15,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useGlobalStyles } from '../styles/globalStyles'; 
 
 const TaskCreationScreen = ({ navigation }) => {
+  
+  // Initialize state variables for task details and modal visibility.
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [due_date, setDueDate] = useState("");
@@ -26,7 +29,8 @@ const TaskCreationScreen = ({ navigation }) => {
 
   const globalStyles = useGlobalStyles();
   
-  // Function to handle task creation
+  // Function to handle task creation, handles the creation of a task by validating fields and sending a POST request to the server.
+
   const handleCreateTask = async () => {
     if (!title.trim() || !due_date.trim()) {
       alert("Please fill out all required fields.");
@@ -62,9 +66,12 @@ const TaskCreationScreen = ({ navigation }) => {
         navigation.goBack();
       })
       .catch((error) => {
-        console.error("Error creating task:", error);
+        console.error("Error creating task:", error); // Catch and log any errors during the task creation process and display an error message to the user.
+
       });
   };
+
+  // Render a scrollable form for task creation with input fields for task details and modals for priority and status selection.
 
   return (
     <ScrollView
@@ -85,6 +92,9 @@ const TaskCreationScreen = ({ navigation }) => {
         style={styles.input}
         multiline
       />
+      
+       {/* Utilize a calendar component to allow users to select a due date for the task. */}
+
       <Calendar
         onDayPress={(day) => setDueDate(day.dateString)}
         markedDates={{ [due_date]: { selected: true, selectedColor: "blue" } }}
@@ -119,6 +129,9 @@ const TaskCreationScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.input} onPress={() => setModalStatusVisible(true)}>
         <Text style={globalStyles.text}>{status}</Text>
       </TouchableOpacity>
+
+      {/* Render modals for selecting task priority and status, which are dynamically populated and controlled by modal visibility states. */}
+
       <Modal
         transparent={true}
         visible={modalStatusVisible}
