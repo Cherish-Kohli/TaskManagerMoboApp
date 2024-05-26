@@ -54,7 +54,7 @@ const LoginScreen = ({ navigation }) => {
         setError(json.message || "Authentication failed");
       }
     } catch (error) {
-      setError("Network error");
+      setError("Invalid username or password");
       console.error("Login request error:", error);
     }
   };

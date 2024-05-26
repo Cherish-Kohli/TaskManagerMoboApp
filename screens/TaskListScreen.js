@@ -48,7 +48,7 @@ const TaskListScreen = ({ navigation }) => {
         })
         .catch(error => {
           console.error('Error fetching tasks:', error);
-          Alert.alert("Error", "Unable to load tasks. Please try again later.");
+          Alert.alert("Error", "No Tasks available. Please create a task to view the list.");
         });
       };
       

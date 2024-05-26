@@ -8,14 +8,13 @@ import {
   ScrollView,
   Alert,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { Calendar } from "react-native-calendars"; // Import Calendar component
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useGlobalStyles } from '../styles/globalStyles'; 
+import { useGlobalStyles } from "../styles/globalStyles";
 
 const TaskCreationScreen = ({ navigation }) => {
-  
   // Initialize state variables for task details and modal visibility.
 
   const [title, setTitle] = useState("");
@@ -28,7 +27,7 @@ const TaskCreationScreen = ({ navigation }) => {
   const [modalStatusVisible, setModalStatusVisible] = useState(false);
 
   const globalStyles = useGlobalStyles();
-  
+
   // Function to handle task creation, handles the creation of a task by validating fields and sending a POST request to the server.
 
   const handleCreateTask = async () => {
@@ -67,7 +66,6 @@ const TaskCreationScreen = ({ navigation }) => {
       })
       .catch((error) => {
         console.error("Error creating task:", error); // Catch and log any errors during the task creation process and display an error message to the user.
-
       });
   };
 
@@ -75,30 +73,34 @@ const TaskCreationScreen = ({ navigation }) => {
 
   return (
     <ScrollView
-    style={globalStyles.container}
-    contentContainerStyle={{ paddingBottom: 20 }}
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 20 }}
     >
       <Text style={globalStyles.text}>Create Task</Text>
       <TextInput
         placeholder="Title"
-        value={title}
+        // value={title}
         onChangeText={setTitle}
         style={styles.input}
       />
+      <Text style={styles.label}>Description:</Text>
       <TextInput
         placeholder="Description"
-        value={description}
+        // value={description}
         onChangeText={setDescription}
         style={styles.input}
         multiline
       />
-      
-       {/* Utilize a calendar component to allow users to select a due date for the task. */}
 
+      {/* Utilize a calendar component to allow users to select a due date for the task. */}
+
+      <Text style={styles.label}>Due Date:</Text>
       <Calendar
         onDayPress={(day) => setDueDate(day.dateString)}
         markedDates={{ [due_date]: { selected: true, selectedColor: "blue" } }}
       />
+
+<Text style={styles.label}>Category:</Text>
       <TextInput
         placeholder="Category"
         value={category}
@@ -106,47 +108,72 @@ const TaskCreationScreen = ({ navigation }) => {
         style={styles.input}
       />
 
-      <TouchableOpacity style={styles.input} onPress={() => setModalPriorityVisible(true)}>
-        <Text style={globalStyles.text}>{priority}</Text>
+      <Text style={styles.label}>Priority:</Text>
+      <TouchableOpacity
+        style={styles.input}
+        onPress={() => setModalPriorityVisible(true)}
+      >
+        <Text style={styles.textStyle}>{priority}</Text>
       </TouchableOpacity>
       <Modal
+        animationType="slide"
         transparent={true}
         visible={modalPriorityVisible}
         onRequestClose={() => setModalPriorityVisible(false)}
       >
-        <TouchableOpacity style={styles.modalView} onPress={() => setModalPriorityVisible(false)}>
-          {["High", "Medium", "Low"].map((p) => (
-            <TouchableOpacity key={p} style={styles.modalItem} onPress={() => {
-              setPriority(p);
-              setModalPriorityVisible(false);
-            }}>
-              <Text style={globalStyles.text}>{p}</Text>
-            </TouchableOpacity>
-          ))}
-        </TouchableOpacity>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            {["High", "Medium", "Low"].map((p) => (
+              <TouchableOpacity
+                style={styles.option}
+                key={p}
+                onPress={() => {
+                  setPriority(p);
+                  setModalPriorityVisible(false);
+                }}
+              >
+                <Text style={styles.textStyle}>{p}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
       </Modal>
 
-      <TouchableOpacity style={styles.input} onPress={() => setModalStatusVisible(true)}>
-        <Text style={globalStyles.text}>{status}</Text>
+      <Text style={styles.textStyle}>Status:</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => setModalStatusVisible(true)}
+      >
+        <Text style={styles.textStyle}>{status}</Text>
       </TouchableOpacity>
 
       {/* Render modals for selecting task priority and status, which are dynamically populated and controlled by modal visibility states. */}
 
       <Modal
         transparent={true}
+        animationType="slide"
         visible={modalStatusVisible}
         onRequestClose={() => setModalStatusVisible(false)}
       >
-        <TouchableOpacity style={styles.modalView} onPress={() => setModalStatusVisible(false)}>
+        <View style={styles.centeredView}>
+        <View
+          style={styles.modalView}
+          onPress={() => setModalStatusVisible(false)}
+        >
           {["Pending", "In Progress", "Completed"].map((s) => (
-            <TouchableOpacity key={s} style={styles.modalItem} onPress={() => {
-              setStatus(s);
-              setModalStatusVisible(false);
-            }}>
-              <Text style={globalStyles.text}>{s}</Text>
+            <TouchableOpacity
+              key={s}
+              style={styles.option}
+              onPress={() => {
+                setStatus(s);
+                setModalStatusVisible(false);
+              }}
+            >
+              <Text style={styles.textStyle}>{s}</Text>
             </TouchableOpacity>
           ))}
-        </TouchableOpacity>
+        </View>
+        </View>
       </Modal>
 
       <Button title="Create Task" onPress={handleCreateTask} />
@@ -158,6 +185,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: "lightblue",
   },
   headerText: {
     fontSize: 20,
@@ -171,25 +199,54 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
-    justifyContent: 'center'
+    backgroundColor: "white",
   },
   picker: {
     height: 50,
     width: "100%",
     marginBottom: 20,
   },
-  modalView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)'
+  label: {
+    fontSize: 16,
+    marginBottom: 10,
+    fontWeight: "bold",
+    color: "#333",
   },
-  modalItem: {
-    backgroundColor: 'white',
-    padding: 20,
-    marginVertical: 10,
-    width: 200,
-    alignItems: 'center'
+  button: {
+    backgroundColor: "#ddd",
+    padding: 10,
+    borderRadius: 5,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+    width: 0,
+    height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  option: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc'
+  },
+  textStyle: {
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "center"
   }
 });
 
